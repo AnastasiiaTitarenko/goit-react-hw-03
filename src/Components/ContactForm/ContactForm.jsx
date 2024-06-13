@@ -1,39 +1,79 @@
 import { useState } from "react"
 import css from './ContactForm.module.css'
+import { useFormik } from "formik";
+import * as Yup from "yup"
 
 const ContactForm = ({ addContact }) => {
-  const [name, setName] = useState("");
-  const [number, setNumber] = useState("");
+  const formik = useFormik({
+    initialValues: {
+      name: "",
+      number: ""
+    },
+    validationSchema: Yup.object({
+      name: Yup.string()
+        .min(3, "Мінімум 3 символи")
+        .max(50, "Максимум 50 символів")
+        .required("Обов'язкове поле"),
+      number: Yup.string()
+        .min(3, "Мінімум 3 символи")
+        .max(50, "Максимум 50 символів")
+        .required("Обов'язкове поле"),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      const newContact = {
+        id: Math.random().toString(),
+        name: values.name,
+        number: values.number
+      };
+      addContact(newContact);
+      resetForm();
+    }
+  });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!name.trim() || !number.trim())
-      return;
-    const newContact = {
-      id: Math.random().toString(),
-      name: name,
-      number: number
-    };
+  // const [name, setName] = useState("");
+  // const [number, setNumber] = useState("");
 
-    addContact(newContact);
-    setName("");
-    setNumber("");
-  };
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   if (!name.trim() || !number.trim())
+  //     return;
+  //   const newContact = {
+  //     id: Math.random().toString(),
+  //     name: name,
+  //     number: number
+  //   };
+
+  //   addContact(newContact);
+  //   setName("");
+  //   setNumber("");
+  // };
   
   return (
-    <form className={css.ContactForm} onSubmit={handleSubmit}>
+    <form className={css.ContactForm} onSubmit={formik.handleSubmit}>
       <input
         type="text"
         placeholder="Name"
-        value={name}
-        onChange={(event)=> setName(event.target.value)}
+        name = "name"
+        value={formik.values.name}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        // onChange={(event)=> setName(event.target.value)}
       />
+      {formik.touched.name && formik.errors.name ? (
+        <div className={css.error}>{formik.errors.name}</div>
+      ): null}
       <input
-        type="text"
+        type="number"
         placeholder="Phone Number"
-        value={number}
-        onChange={(event)=> setNumber(event.target.value)}
+        name="number"
+        value={formik.values.number}
+        onChange={formik.handleChange}
+        onBlur={formik.handleBlur}
+        // onChange={(event)=> setNumber(event.target.value)}
       />
+       {formik.touched.number && formik.errors.number ? (
+        <div className={css.error}>{formik.errors.number}</div>
+      ): null}
       <button className={css.addBtn} type="submit">Add Contact</button>
     </form>
   )
