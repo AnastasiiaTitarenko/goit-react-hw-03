@@ -29,7 +29,6 @@ const ContactForm = ({ addContact }) => {
       resetForm();
     }
   });
-
   // const [name, setName] = useState("");
   // const [number, setNumber] = useState("");
 
@@ -57,7 +56,7 @@ const ContactForm = ({ addContact }) => {
         value={formik.values.name}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        // onChange={(event)=> setName(event.target.value)}
+  
       />
       {formik.touched.name && formik.errors.name ? (
         <div className={css.error}>{formik.errors.name}</div>
@@ -69,7 +68,7 @@ const ContactForm = ({ addContact }) => {
         value={formik.values.number}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
-        // onChange={(event)=> setNumber(event.target.value)}
+
       />
        {formik.touched.number && formik.errors.number ? (
         <div className={css.error}>{formik.errors.number}</div>
